@@ -18,7 +18,6 @@ enum {
   PORTNUM = 2300,
   MAXCONS = 5,
   MAXRECVLEN = 500,
-  QUEUELEN = 8
 };
 
 struct pollfd connection_fds[MAXCONS+1];
@@ -116,8 +115,14 @@ int main(int argc, char *argv[])
     // -> it works the same as htonl but for short (16 bit) numbers
     serv.sin_port = htons(PORTNUM);
 
-    //socket used to listen for incoming connections
-    int mysocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0); 
+    // non-blocking socket used to listen for incoming connections
+    int mysocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+
+    // set socket flag to allow address reuse
+    int sopt = 1;
+    setsockopt(
+        mysocket, SOL_SOCKET, SO_REUSEADDR, (char *)&sopt, sizeof(sopt)
+    );
 
     // bind serv information to mysocket
     bind(mysocket, (struct sockaddr *)&serv, sizeof(struct sockaddr_in));

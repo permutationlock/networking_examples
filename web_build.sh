@@ -1,0 +1,1 @@
+emcc -o web_server/build/client.html echo_client_graphical.c --shell-file web_server/shell.html -Oz -Wall ./../lib_wasm/libraylib.a -I../raylib/src/ -L../lib_wasm/ -s ASYNCIFY -s USE_GLFW=3 -DPLATFORM_WEB
